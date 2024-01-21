@@ -37,7 +37,7 @@ Again please review the script and tailor it to your needs. I for sure may have 
 
 ## Future improvements
 
-- Reveiw the script and make sure it still even works.
+- Review the script and make sure it still even works.
 - Improve regex to include ~/'container'
 - Implement timeout for password memory storage 
 - Clean up reduntant echo statements

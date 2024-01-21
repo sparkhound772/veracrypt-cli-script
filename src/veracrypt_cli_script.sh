@@ -3,7 +3,7 @@
 # Name: veracrypt-cti-script.sh
 # Description: Decrypt and mount VeraCrypt containers with the VeraCrypt and Bitwarden command line tools.
 # Author: sparklehound
-# Last edit: 2023-07-19
+# Last edit: 2024-01-21
 
 global_pass=1
 global_bw_pass=1
