@@ -52,7 +52,7 @@ main () {
 	done
 }
 
-# The object is a drive, not a container.
+# Gathering necessary information for decryption
 prepare_for_decryption () {
 	echo
 	local name
@@ -240,4 +240,3 @@ main
 #	done
 #}
 #
-
