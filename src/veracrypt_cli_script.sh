@@ -6,7 +6,7 @@
 # Last edit: 2023-07-19
 
 global_pass=1
-bw_pass=1
+global_bw_pass=1
 
 # The main function which displays the main menu and runs the rest of the script.
 main () {
@@ -27,8 +27,7 @@ main () {
 				;;
 			4)
 				echo
-				enter_BW_pass
-				global_pass=0
+				enter_global_bw_pass
 				echo
 				echo "*** Remember to close the script when done to remove the password from the computers memory ***"
 				echo
@@ -90,16 +89,19 @@ prepare_for_decryption () {
 # $3 - path to mountpoint
 # $4 - slot
 decrypt_and_mount () {
-	if [ "$global_pass" -eq 1 ]
+	local local_bw_pass
+	if [ "$global_pass" -eq 0 ]
 	then
+		local_bw_pass=global_bw_pass
+	else
 		echo 
-		enter_BW_pass
+		read -s -p "Enter your BW master password and press Enter (input is silent): " local_bw_pass
 		echo
 	fi		
-	local pass=$(echo "$bwpass" | bw get password $1)
+	local decryption_pass=$(echo "$local_bw_pass" | bw get password $1)
 	echo
-	sudo veracrypt --text --mount "$2" "$3" --slot="$4" --password="$pass" --pim=0 --keyfiles="" --protect-hidden=no --verbose --background-task
-	unset $bwpass
+	sudo veracrypt --text --mount "$2" "$3" --slot="$4" --password="$decryption_pass" --pim=0 --keyfiles="" --protect-hidden=no --verbose --background-task
+	unset $local_bw_pass
 	echo "/** If you get a message above here that says:"
 	echo "    \"Volume '/path/file' has been dismounted.\""
 	echo "    that means success."
@@ -110,8 +112,9 @@ decrypt_and_mount () {
 
 # The BW master password is prompted for, stored as a global variable,
 # and then will be piped to bitwarden-cli to retrieve the decryption password for the volume.
-enter_BW_pass () {
-	read -s -p "Enter your BW master password and press Enter (input is silent): " bwpass
+enter_global_bw_pass () {
+	read -s -p "Enter your BW master password and press Enter (input is silent): " global_bw_pass
+	global_pass=0
 	echo
 }
 
@@ -174,13 +177,13 @@ main
 #
 # if [ $vol -eq 1 ]
 # then
-# 	outerpass=$(echo "$bwpass" | bw get password usbbackup1)
-# 	hiddenpass=$(echo "$bwpass" | bw get password usbbackuphidden1)
+# 	outerpass=$(echo "$global_bw_pass" | bw get password usbbackup1)
+# 	hiddenpass=$(echo "$global_bw_pass" | bw get password usbbackuphidden1)
 # 	sudo veracrypt --text --mount /dev/"$device" /mnt/veracrypt"$slot" --slot="$slot" --password="$outerpass" --pim=0 --keyfiles="" --password="$outerpass" --protect-hidden=yes --protection-password="$hiddenpass" --protection-pim=0 --protection-keyfiles="" --verbose --background-task
 # 	echo \(*ignore the above line*\)
 # elif [ $vol -eq 2 ]
 # then
-# 	hiddenpass=$(echo "$bwpass" | bw get password usbbackuphidden1)
+# 	hiddenpass=$(echo "$global_bw_pass" | bw get password usbbackuphidden1)
 # 	sudo veracrypt --text --mount /dev/"$device" /mnt/veracrypt"$slot" --slot="$slot" --password="$hiddenpass" --pim=0 --keyfiles="" --protect-hidden=no --verbose --background-task
 # 	echo \(*ignore the above line*\)
 # else
