@@ -37,6 +37,8 @@ Again please review the script and tailor it to your needs.
 
 ## Future improvements
 
+- Replace tabs with spaces? Mostly because GitHub by default renders tabs as 8(!) spaces,
+  unless the viewer has changed this under Settings -> Appearence.
 - Review the script and make sure it still even works.
 - Improve regex to include ~/'container'
 - Implement timeout for password memory storage 
